@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>CSRF</title>
+    
+    <link href="css/impress-demo.css" rel="stylesheet" />
+</head>
+<body class="impress-not-supported">
+
+<div id="impress">
+
+    <div id="title" class="step">
+        <h1>CSRF</h1>
+    </div>
+
+    <div id="whoami" class="step" data-z=-5000 >
+        <h1>whoami</h1>
+	<ul>
+		<li>@vbakaitis on twitter</li>
+		<li>previously Xero, Aura Information Security</li>
+		<li>currently RedShield</li>
+	</ul>
+    </div>
+
+    <div id="history" class="step" data-z=0 data-x=2000>
+       Brief history of web
+    </div>
+
+	<div class="step" data-z=-1000 >1989/1990 - HTTP, HTML</div>
+	<div class="step" data-z=-2000>Feb 1993 - Images</div>
+	<div class="step" data-z=-3000>Jan 1994 - Forms</div>
+	<div class="step" data-z=-4000>Oct 1994 - Cookies</div>
+	<div class="step" data-z=-5000>May 1995 - JavaScript</div>
+
+	<div class="step" data-rotate-x=90 data-z=-5100>
+		How different parts of web work?
+	</div>
+	<div class="step" data-rotate-x=90 data-rel-x=1000>Browser acts like a broker between user, website and the web server</div>
+	<div class="step" data-rotate-x=90 data-rel-x=1000>Websites and users can perform actions in the browser</div>
+	<div class="step" data-rotate-x=90 data-rel-x=1000>Server does not really know what is happening in the browser</div>
+
+
+    <div id="csrf" class="step" data-rotate-x=180>
+	<p>CSRF attack</p>
+	<div id="diagram">
+		<div class="substep box middle" id="user"> User</div>
+		<div class="substep box middle" id="browser">Browser</div>
+		<svg class="substep" width="500px" height="700px">
+		  <defs>
+		    <marker id="arrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+		      <path d="M0,0 L0,6 L9,3 z" fill="#888" />
+		    </marker>
+		    <marker id="rarrow" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
+		      <path d="M0,0 L0,6 L9,3 z" fill="#888" />
+		    </marker>
+		  </defs>
+
+		  <line x1="460" y1="140" x2="460" y2="350" stroke="#888" stroke-width="5" marker-end="url(#arrow)" marker-start="url(#rarrow)">
+		</svg>
+		
+		<div class="substep req user-browser">bank?</div>
+		<div class="substep box server">Bank server</div>
+		
+		<svg class="substep" width="500px" height="700px">
+		  <line x1="330" y1="500" x2="150" y2="570" stroke="#888" stroke-width="5" marker-end="url(#arrow)" marker-start="url(#rarrow)">
+		</svg>
+		
+		<div class="substep req bank">bank?</div>
+		<div class="substep req bank-browser">bank!</div>
+		
+		<div class="substep box website">Bank website</div>
+
+		<svg class="substep" width="900px" height="700px">
+		  <line x1="330" y1="400" x2="150" y2="325" stroke="#888" stroke-width="5" marker-end="url(#arrow)" marker-start="url(#rarrow)">
+		</svg>
+		
+
+		<div class="substep req browser-bank-website">bank!</div>
+		
+
+		<svg class="substep" width="900px" height="700px">
+		  <line x1="355" y1="100" x2="140" y2="180" stroke="#888" stroke-width="5" marker-end="url(#arrow)" marker-start="url(#rarrow)">
+		</svg>
+		<div class="substep req bank-website-user">login?</div>
+		<div class="substep req req6">login!</div>
+		<div class="substep req req7">login!</div>
+		<div class="substep req bank">login!</div>
+		<div class="substep req bank-browser">account!<img src="cookie.png" width=50 height=auto></div>	
+		<div class="substep req cookie"> <img src="cookie.png" width=50 height=auto></div>
+		<div class="substep req browser-bank-website">account!</div>
+		<div class="substep req bank-website-user">account!</div>	
+
+		<div class="substep req user-browser">bad?</div>	
+
+
+		<div class="substep box server bad">Bad server</div>
+
+		<svg class="substep" width="900px" height="700px">
+		  <line x1="605" y1="500" x2="750" y2="570" stroke="#888" stroke-width="5" marker-end="url(#arrow)" marker-start="url(#rarrow)">
+		</svg>
+
+		<div class="substep req req8">bad?</div>	
+		<div class="substep req req9">bad!</div>	
+
+		<div class="substep box website bad">Bad website</div>
+
+
+		<svg class="substep" width="900px" height="700px">
+		  <line x1="605" y1="400" x2="750" y2="325" stroke="#888" stroke-width="5" marker-end="url(#arrow)" marker-start="url(#rarrow)">
+		</svg>
+
+
+		<div class="substep req req10">bad!</div>	
+		<div class="substep req req11">$$$?</div>	
+		<div class="substep req bank">$$$?<img src="cookie.png" width=50 height=auto></div>	
+		<div class="substep req req12">OK</div>	
+		
+			
+
+	</div>
+    </div>
+	<div class="step">CSRF Protection</div>
+	<div class="step" id="csrf_token">CSRF Token
+
+	<div id="diagram">
+		<div class="substep box middle" id="user"> User</div>
+		<div class="substep box middle" id="browser">Browser</div>
+		<svg class="substep" width="500px" height="700px">
+		  <defs>
+		    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+		      <path d="M0,0 L0,6 L9,3 z" fill="#888" />
+		    </marker>
+		    <marker id="rarrow2" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto-start-reverse" markerUnits="strokeWidth">
+		      <path d="M0,0 L0,6 L9,3 z" fill="#888" />
+		    </marker>
+		  </defs>
+		  <line x1="460" y1="140" x2="460" y2="350" stroke="#888" stroke-width="5" marker-end="url(#arrow2)" marker-start="url(#rarrow2)">
+		</svg>
+		
+		<div class="substep req user-browser">bank?</div>
+		<div class="substep box server">Bank server</div>
+		
+		<svg class="substep" width="500px" height="700px">
+		  <line x1="330" y1="500" x2="150" y2="570" stroke="#888" stroke-width="5" marker-end="url(#arrow2)" marker-start="url(#rarrow2)">
+		</svg>
+		
+		<div class="substep req bank">bank?</div>
+		<div class="substep req bank-browser">bank!</div>
+		
+		<div class="substep box website">Bank website</div>
+
+		<svg class="substep" width="900px" height="700px">
+		  <line x1="330" y1="400" x2="150" y2="325" stroke="#888" stroke-width="5" marker-end="url(#arrow2)" marker-start="url(#rarrow2)">
+		</svg>
+		
+
+		<div class="substep req browser-bank-website">bank!</div>
+		
+
+		<svg class="substep" width="900px" height="700px">
+		  <line x1="355" y1="100" x2="140" y2="180" stroke="#888" stroke-width="5" marker-end="url(#arrow2)" marker-start="url(#rarrow2)">
+		</svg>
+		<div class="substep req bank-website-user">login?</div>
+		<div class="substep req req6">login!</div>
+		<div class="substep req req7">login!</div>
+		<div class="substep req bank">login!</div>
+		<div class="substep req bank-browser">account!<img src="cookie.png" width=50 height=auto><img src="token.png" width=45 height=auto></div>	
+		<div class="substep req cookie"> <img src="cookie.png" width=50 height=auto></div>
+		<div class="substep req browser-bank-website">account!<img src="token.png" width=45 height=auto></div>
+		<div class="substep req token"><img src="token.png" width=45 height=auto></div>
+		<div class="substep req bank-website-user">account!</div>
+	
+		<div class="substep req req6">$$$?</div>	
+		<div class="substep req req7">$$$?<img src="token.png" width=45 height=auto></div>	
+		<div class="substep req bank">$$$?<img src="cookie.png" width=50 height=auto><img src="token.png" width=45 height=auto></div>	
+		<div class="substep req bank-browser">OK</div>	
+
+		<div class="substep req user-browser">bad?</div>	
+
+
+		<div class="substep box server bad">Bad server</div>
+
+		<svg class="substep" width="900px" height="700px">
+		  <line x1="605" y1="500" x2="750" y2="570" stroke="#888" stroke-width="5" marker-end="url(#arrow2)" marker-start="url(#rarrow2)">
+		</svg>
+
+		<div class="substep req req8">bad?</div>	
+		<div class="substep req req9">bad!</div>	
+
+		<div class="substep box website bad">Bad website</div>
+
+
+		<svg class="substep" width="900px" height="700px">
+		  <line x1="605" y1="400" x2="750" y2="325" stroke="#888" stroke-width="5" marker-end="url(#arrow2)" marker-start="url(#rarrow2)">
+		</svg>
+
+
+		<div class="substep req req10">bad!</div>	
+		<div class="substep req req11">$$$?</div>	
+		<div class="substep req bank">$$$?<img src="cookie.png" width=50 height=auto></div>	
+		<div class="substep req req12">NO!</div>	
+		
+			
+
+	</div>
+
+</div>
+<div class="step" data-rotate-x=90 data-rel-y=-500 data-rel-x=0>SameSite cookie</div>
+<div class="step">Side effects that can protect against CSRF</div>
+<div class="step">Content-type header</div>
+<div class="step" data-rel-x=500 data-rel-y=0>Custom headers</div>
+<div class="step" data-rotate-y=90 data-rel-z=-400 data-rel-x=-50 >Checking Origin header</div>
+
+<div class="step" data-rotate-y=90  data-rel-z=-500 >User protection</div>
+<div class="step" data-rotate-y=180 data-rotate-x=0 data-rel-z=50 data-rel-x=-400 data-rel-y=0>Incognito mode</div>
+<div class="step" data-rotate-y=180 data-rotate-x=90 data-rel-x=0 data-rel-z=10 data-rel-y=40>Dedicated browser profile</div>
+<div class="step" data-rotate-y=180 data-rotate-x=180 data-rel-y=-50 data-rel-z=50>Don't browser dodgy websites while checking your bank account</div>
+<div class="step" data-rotate-y=180 data-rotate-x=180 data-scale=10>Questions?</div>
+
+</div>
+
+<script src="js/impress.js"></script>
+<script>impress().init();</script>
+</body>
+</html>
